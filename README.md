@@ -1,36 +1,143 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Booking Room - Сервіс бронювання кімнат
 
-## Getting Started
+Проект створено студентами КПІ ім. Ігоря Сікорського для курсу "Інформаційні системи та технології".
 
-First, run the development server:
+## Команда розробників
+
+-  **Гончаренко Вероніка** (ІС-34) - Фронтенд-розробник
+-  **Ленченко Ярослав** (ІС-34) - Бекенд-розробник
+-  **Непрон Анастасія** (ІК-34) - Аналітик / QA-тестувальник
+-  **Хоменко Катерина** (ІК-32) - Дизайнер
+
+## Технологічний стек
+
+-  **Frontend + Backend**: Next.js 15 (App Router з SSR)
+-  **Styling**: Tailwind CSS 4
+-  **Database**: NeonDB (PostgreSQL)
+-  **Hosting**: Vercel
+-  **Language**: TypeScript
+-  **Version Control**: Git
+
+## Функціональність
+
+### Для користувачів:
+
+-  Перегляд всіх доступних кімнат
+-  Детальна інформація про кожну кімнату
+-  Вибір дат заїзду та виїзду
+-  Відправлення запиту на бронювання
+
+### Для адміністраторів:
+
+-  Перегляд усіх запитів на бронювання
+-  Підтвердження або відхилення бронювань
+-  Управління інформацією про кімнати
+-  Статистика бронювань
+
+## Запуск проекту
+
+### Встановлення залежностей:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Запуск у режимі розробки:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Збірка для продакшену:
 
-## Learn More
+```bash
+pnpm build
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Запуск продакшн версії:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Відкрийте [http://localhost:3000](http://localhost:3000) у браузері.
+
+## Структура проекту
+
+```
+booking/
+├── app/                    # Next.js App Router
+│   ├── admin/             # Адміністративна панель
+│   ├── rooms/[id]/        # Сторінки деталей кімнат (динамічні)
+│   ├── layout.tsx         # Головний layout
+│   ├── page.tsx           # Головна сторінка
+│   └── globals.css        # Глобальні стилі
+├── components/            # React компоненти
+│   ├── Header.tsx         # Шапка сайту
+│   ├── Footer.tsx         # Підвал сайту
+│   ├── RoomCard.tsx       # Картка кімнати
+│   ├── BookingForm.tsx    # Форма бронювання
+│   └── BookingList.tsx    # Список бронювань
+├── lib/                   # Утиліти та функції
+│   ├── data.ts            # Функції роботи з даними
+│   └── utils.ts           # Допоміжні функції
+├── types/                 # TypeScript типи
+│   └── index.ts           # Основні типи
+└── public/                # Статичні файли
+```
+
+## Особливості реалізації
+
+### Server-Side Rendering (SSR)
+
+Всі основні сторінки використовують SSR для оптимальної продуктивності:
+
+-  Головна сторінка завантажує список кімнат на сервері
+-  Сторінка деталей кімнати отримує дані на сервері
+-  Адміністративна панель завантажує бронювання на сервері
+
+### Responsive Design
+
+Інтерфейс адаптивний і коректно відображається на всіх пристроях:
+
+-  Мобільні телефони (від 320px)
+-  Планшети (від 768px)
+-  Десктопи (від 1024px)
+
+### Продуктивність
+
+-  Оптимізація зображень через Next.js Image
+-  Code splitting автоматично через App Router
+-  Кешування даних на рівні сервера
+
+## Нефункціональні вимоги
+
+✅ **NFR-01**: Час завантаження < 2 секунди  
+✅ **NFR-02**: Адаптивний дизайн для всіх пристроїв  
+✅ **NFR-03**: Висока доступність через Vercel hosting  
+✅ **NFR-04**: Безпека даних користувачів
+
+## Подальший розвиток
+
+-  [ ] Інтеграція з NeonDB (PostgreSQL)
+-  [ ] Автентифікація користувачів
+-  [ ] Система платежів
+-  [ ] Email-нотифікації
+-  [ ] Мультимовність (UA/EN)
+-  [ ] Фільтрація та пошук кімнат
+-  [ ] Календар доступності кімнат
+-  [ ] Відгуки користувачів
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Check out the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Ліцензія
+
+Цей проект створено в навчальних цілях для КПІ ім. Ігоря Сікорського.
+
+---
+
+**2025 © Booking Room - Всі права захищені**
