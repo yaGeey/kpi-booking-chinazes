@@ -1,0 +1,4 @@
+notify user with email about changing booking status
+login for administators
+clean db - remove user table and add everyhing to booking table
+show users when room is not available

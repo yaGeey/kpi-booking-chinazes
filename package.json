@@ -12,9 +12,11 @@
       "test:coverage": "jest --coverage"
    },
    "dependencies": {
+      "@neondatabase/serverless": "^1.0.2",
       "next": "15.6.0-canary.52",
       "react": "19.1.0",
-      "react-dom": "19.1.0"
+      "react-dom": "19.1.0",
+      "resend": "^6.4.0"
    },
    "devDependencies": {
       "@biomejs/biome": "2.2.5",

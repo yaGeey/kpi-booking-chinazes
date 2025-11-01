@@ -1,15 +1,12 @@
 'use client'
-
 import { useState } from 'react'
 import { calculateTotalPrice, formatPrice } from '@/lib/utils'
+import { Room } from '@/lib/types'
+import { createBooking } from '@/lib/db/bookings'
+import { isRoomAvailable } from '@/lib/db/rooms'
+import { createUser, getUserByEmail } from '@/lib/db/users'
 
-interface BookingFormProps {
-   roomId: string
-   roomName: string
-   pricePerNight: number
-}
-
-export default function BookingForm({ roomId, roomName, pricePerNight }: BookingFormProps) {
+export default function BookingForm({ room }: { room: Room }) {
    const [formData, setFormData] = useState({
       name: '',
       email: '',
@@ -21,48 +18,72 @@ export default function BookingForm({ roomId, roomName, pricePerNight }: Booking
    const [success, setSuccess] = useState(false)
    const [error, setError] = useState('')
 
-   const totalPrice = formData.checkIn && formData.checkOut ? calculateTotalPrice(pricePerNight, formData.checkIn, formData.checkOut) : 0
+   const isValidDateRange = (checkIn: string, checkOut: string): boolean => {
+      if (!checkIn || !checkOut) return false
+      const checkInDate = new Date(checkIn)
+      const checkOutDate = new Date(checkOut)
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+
+      if (checkInDate < today) return false
+      if (checkOutDate <= checkInDate) return false
+      return true
+   }
+
+   const totalPrice = isValidDateRange(formData.checkIn, formData.checkOut)
+      ? calculateTotalPrice(room.pricePerNight, formData.checkIn, formData.checkOut)
+      : 0
 
    const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault()
       setLoading(true)
       setError('')
 
-      // Валідація дат
-      const checkIn = new Date(formData.checkIn)
-      const checkOut = new Date(formData.checkOut)
-      const today = new Date()
-      today.setHours(0, 0, 0, 0)
+      try {
+         const checkIn = new Date(formData.checkIn)
+         const checkOut = new Date(formData.checkOut)
+         const today = new Date()
+         today.setHours(0, 0, 0, 0)
 
-      if (checkIn < today) {
-         setError('Дата заїзду не може бути в минулому')
-         setLoading(false)
-         return
-      }
+         if (checkIn < today) {
+            setError('Дата заїзду не може бути в минулому')
+            setLoading(false)
+            return
+         }
 
-      if (checkOut <= checkIn) {
-         setError('Дата виїзду повинна бути пізніше дати заїзду')
-         setLoading(false)
-         return
-      }
+         if (checkOut <= checkIn) {
+            setError('Дата виїзду повинна бути пізніше дати заїзду')
+            setLoading(false)
+            return
+         }
 
-      // Симуляція API запиту
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+         const available = await isRoomAvailable(room.id, checkIn, checkOut)
+         if (!available) {
+            setError('Номер вже заброньовано на ці дати. Будь ласка, оберіть інші дати.')
+            setLoading(false)
+            return
+         }
 
-      setSuccess(true)
-      setLoading(false)
-
-      // Скидання форми
-      setTimeout(() => {
-         setFormData({
-            name: '',
-            email: '',
-            phone: '',
-            checkIn: '',
-            checkOut: '',
+         const user = await createUser({
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
          })
-         setSuccess(false)
-      }, 3000)
+
+         await createBooking({
+            userId: user.id,
+            roomId: room.id,
+            status: 'CREATE',
+            startDate: formData.checkIn,
+            endDate: formData.checkOut,
+         })
+         setSuccess(true)
+         setLoading(false)
+      } catch (err) {
+         setError('Помилка при створенні бронювання.')
+         setLoading(false)
+         console.error(err)
+      }
    }
 
    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

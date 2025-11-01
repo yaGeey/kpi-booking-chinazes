@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Inter, Inter_Tight } from 'next/font/google'
 import './globals.css'
+import Footer from '@/components/Footer'
+import Header from '@/components/Header'
 
 const inter = Inter({
    variable: '--font-inter',
@@ -24,7 +26,11 @@ export default function RootLayout({
 }>) {
    return (
       <html lang="uk">
-         <body className={`${inter.variable} ${interTight.variable} antialiased flex flex-col min-h-screen`}>{children}</body>
+         <body className={`${inter.variable} ${interTight.variable} antialiased flex flex-col min-h-screen`}>
+            <Header />
+            {children}
+            <Footer />
+         </body>
       </html>
    )
 }
