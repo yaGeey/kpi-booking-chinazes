@@ -1,13 +1,10 @@
 'use client'
-
 import { useState } from 'react'
 
 interface BookedDate {
    startDate: string
    endDate: string
 }
-
-interface RoomCalendarProps {}
 
 export default function RoomCalendar({ bookedDates }: { bookedDates: BookedDate[] }) {
    const [currentMonth, setCurrentMonth] = useState(new Date())

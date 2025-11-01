@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import Link from 'next/link';
 
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
    useEffect(() => {
@@ -29,9 +30,9 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
                   >
                      Спробувати знову
                   </button>
-                  <a href="/" className="bg-gray-200 text-gray-800 px-8 py-3 rounded-lg hover:bg-gray-300 transition-colors font-medium">
+                  <Link href="/" className="bg-gray-200 text-gray-800 px-8 py-3 rounded-lg hover:bg-gray-300 transition-colors font-medium">
                      На головну
-                  </a>
+                  </Link>
                </div>
             </div>
          </main>
