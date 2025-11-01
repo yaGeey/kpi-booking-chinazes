@@ -1,6 +1,11 @@
+'use server'
+import { cookies } from 'next/headers'
 import Link from 'next/link'
 
-export default function Header() {
+export default async function Header() {
+   const cookieStore = await cookies()
+   const authCookie = cookieStore.get('admin-auth')
+   const isAdmin = authCookie && authCookie.value == process.env.ADMIN_PASSWORD_HASH
    return (
       <header className="bg-white shadow-sm sticky top-0 z-50">
          <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -15,9 +20,11 @@ export default function Header() {
                <Link href="/" className="text-gray-700 hover:text-blue-600 transition-colors">
                   Кімнати
                </Link>
-               <Link href="/admin" className="text-gray-700 hover:text-blue-600 transition-colors">
-                  Адмін панель
-               </Link>
+               {isAdmin && (
+                  <Link href="/admin" className="text-gray-700 hover:text-blue-600 transition-colors">
+                     Адмін панель
+                  </Link>
+               )}
             </div>
          </nav>
       </header>

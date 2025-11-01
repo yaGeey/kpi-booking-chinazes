@@ -2,11 +2,17 @@ import BookingList from '@/components/BookingList'
 import RefreshButton from '@/components/RefreshButton'
 import { getAllBookings } from '@/lib/db/bookings'
 import { getAllRooms, isRoomAvailable } from '@/lib/db/rooms'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 export default async function AdminPage() {
+   // Перевірка авторизації на сервері
+   const cookieStore = await cookies()
+   const authCookie = cookieStore.get('admin-auth')
+   if (!authCookie || authCookie.value !== process.env.ADMIN_PASSWORD_HASH!) redirect('/admin/login')
+
    const bookings = await getAllBookings()
    const rooms = await getAllRooms()
-   console.log(bookings)
 
    const stats = {
       totalBookings: bookings.length,
