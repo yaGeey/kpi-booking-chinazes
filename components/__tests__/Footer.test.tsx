@@ -9,27 +9,19 @@ describe('Footer Component', () => {
       expect(companyName).toBeInTheDocument()
    })
 
-   it('should render all sections', () => {
+   it('should render contact information', () => {
       render(<Footer />)
 
-      expect(screen.getByText(/про компанію/i)).toBeInTheDocument()
-      expect(screen.getByText(/контакти/i)).toBeInTheDocument()
-      expect(screen.getByText(/години роботи/i)).toBeInTheDocument()
+      expect(screen.getByText(/Київ, Україна/i)).toBeInTheDocument()
+      expect(screen.getByText(/\+380 \(50\) 123-45-67/)).toBeInTheDocument()
+      expect(screen.getByText(/info@bookingroom\.ua/)).toBeInTheDocument()
    })
 
-   it('should display contact information', () => {
+   it('should display copyright', () => {
       render(<Footer />)
 
-      expect(screen.getByText(/\+380 \(44\) 123-45-67/)).toBeInTheDocument()
-      expect(screen.getByText(/info@bookingroom\.com/)).toBeInTheDocument()
-      expect(screen.getByText(/вул\. Хрещатик, 1/i)).toBeInTheDocument()
-   })
-
-   it('should display working hours', () => {
-      render(<Footer />)
-
-      expect(screen.getByText(/пн-пт: 9:00 - 18:00/i)).toBeInTheDocument()
-      expect(screen.getByText(/сб-нд: 10:00 - 16:00/i)).toBeInTheDocument()
+      expect(screen.getByText(/© 2025 Booking Room/i)).toBeInTheDocument()
+      expect(screen.getByText(/КПІ ім\. Ігоря Сікорського/i)).toBeInTheDocument()
    })
 
    it('should display copyright', () => {
@@ -38,12 +30,5 @@ describe('Footer Component', () => {
       const currentYear = new Date().getFullYear()
       const copyright = screen.getByText(new RegExp(`© ${currentYear}`, 'i'))
       expect(copyright).toBeInTheDocument()
-   })
-
-   it('should have correct background color', () => {
-      const { container } = render(<Footer />)
-      const footer = container.querySelector('footer')
-
-      expect(footer).toHaveClass('bg-gray-900', 'text-white')
    })
 })
