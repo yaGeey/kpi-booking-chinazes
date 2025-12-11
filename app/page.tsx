@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react'
 import RoomFilters from '@/components/RoomFilters'
 import RoomCard from '@/components/RoomCard'
+import type { Room } from '@/lib/types'
 
 export default function HomePage() {
-  const [rooms, setRooms] = useState<any[]>([])
+  const [rooms, setRooms] = useState<Room[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showFilters, setShowFilters] = useState(false)
