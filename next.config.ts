@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
    experimental: {
       useLightningcss: true,
       typedRoutes: true,
-      turbopackPersistentCachingForDev: true,
+      turbopackFileSystemCacheForDev: true,
       ppr: 'incremental', // TODO
       authInterrupts: true, // TODO
       browserDebugInfoInTerminal: true,
