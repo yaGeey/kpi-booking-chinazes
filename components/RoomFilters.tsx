@@ -1,101 +1,107 @@
 'use client'
-
 import { useState } from 'react'
 
 interface RoomFiltersProps {
-   onFilterChange?: (filters: FilterState) => void
-}
-
-export interface FilterState {
-   minPrice: number
-   maxPrice: number
-   capacity: number
-   searchQuery: string
+  onFilterChange: (filters: { capacity?: number; minPrice?: number; maxPrice?: number }) => void
 }
 
 export default function RoomFilters({ onFilterChange }: RoomFiltersProps) {
-   const [filters, setFilters] = useState<FilterState>({
-      minPrice: 0,
-      maxPrice: 10000,
-      capacity: 0,
-      searchQuery: '',
-   })
+  const [capacity, setCapacity] = useState<string>('')
+  const [minPrice, setMinPrice] = useState<string>('')
+  const [maxPrice, setMaxPrice] = useState<string>('')
+  const [isLoading, setIsLoading] = useState(false)
 
-   const handleFilterChange = (key: keyof FilterState, value: number | string) => {
-      const newFilters = { ...filters, [key]: value }
-      setFilters(newFilters)
-      onFilterChange?.(newFilters)
-   }
+  const applyFilters = async () => {
+    setIsLoading(true)
+    
+    const filters: { capacity?: number; minPrice?: number; maxPrice?: number } = {}
+    
+    if (capacity && !isNaN(Number(capacity)) && Number(capacity) > 0) {
+      filters.capacity = Number(capacity)
+    }
+    
+    if (minPrice && !isNaN(Number(minPrice)) && Number(minPrice) >= 0) {
+      filters.minPrice = Number(minPrice)
+    }
+    
+    if (maxPrice && !isNaN(Number(maxPrice)) && Number(maxPrice) >= 0) {
+      filters.maxPrice = Number(maxPrice)
+    }
+    
+    await onFilterChange(filters)
+    setIsLoading(false)
+  }
 
-   const resetFilters = () => {
-      const defaultFilters: FilterState = {
-         minPrice: 0,
-         maxPrice: 10000,
-         capacity: 0,
-         searchQuery: '',
-      }
-      setFilters(defaultFilters)
-      onFilterChange?.(defaultFilters)
-   }
+  const handleReset = () => {
+    setCapacity('')
+    setMinPrice('')
+    setMaxPrice('')
+    onFilterChange({})
+  }
 
-   return (
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-         <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-semibold text-gray-900">Фільтри пошуку</h3>
-            <button onClick={resetFilters} className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors">
-               Скинути
-            </button>
-         </div>
-
-         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-               <label className="block text-sm font-medium text-gray-700 mb-2">Пошук</label>
-               <input
-                  type="text"
-                  value={filters.searchQuery}
-                  onChange={(e) => handleFilterChange('searchQuery', e.target.value)}
-                  placeholder="Назва кімнати..."
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-               />
-            </div>
-
-            <div>
-               <label className="block text-sm font-medium text-gray-700 mb-2">Мін. ціна (₴)</label>
-               <input
-                  type="number"
-                  value={filters.minPrice}
-                  onChange={(e) => handleFilterChange('minPrice', Number(e.target.value))}
-                  min="0"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-               />
-            </div>
-
-            <div>
-               <label className="block text-sm font-medium text-gray-700 mb-2">Макс. ціна (₴)</label>
-               <input
-                  type="number"
-                  value={filters.maxPrice}
-                  onChange={(e) => handleFilterChange('maxPrice', Number(e.target.value))}
-                  min="0"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-               />
-            </div>
-
-            <div>
-               <label className="block text-sm font-medium text-gray-700 mb-2">Кількість осіб</label>
-               <select
-                  value={filters.capacity}
-                  onChange={(e) => handleFilterChange('capacity', Number(e.target.value))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-               >
-                  <option value="0">Будь-яка</option>
-                  <option value="1">1 особа</option>
-                  <option value="2">2 особи</option>
-                  <option value="3">3 особи</option>
-                  <option value="4">4+ особи</option>
-               </select>
-            </div>
-         </div>
+  return (
+    <div className="flex flex-col gap-4">
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Кількість людей (до)
+        </label>
+        <input
+          type="number"
+          placeholder="Наприклад: 4"
+          value={capacity}
+          onChange={e => setCapacity(e.target.value)}
+          className="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          disabled={isLoading}
+          min="1"
+        />
       </div>
-   )
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Мінімальна ціна за ніч (грн)
+        </label>
+        <input
+          type="number"
+          placeholder="Від"
+          value={minPrice}
+          onChange={e => setMinPrice(e.target.value)}
+          className="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          disabled={isLoading}
+          min="0"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Максимальна ціна за ніч (грн)
+        </label>
+        <input
+          type="number"
+          placeholder="До"
+          value={maxPrice}
+          onChange={e => setMaxPrice(e.target.value)}
+          className="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          disabled={isLoading}
+          min="0"
+        />
+      </div>
+
+      <div className="flex gap-2 mt-2">
+        <button
+          onClick={applyFilters}
+          disabled={isLoading}
+          className="flex-1 bg-blue-600 text-white px-4 py-3 rounded font-medium hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
+          {isLoading ? 'Завантаження...' : 'Застосувати фільтр'}
+        </button>
+        <button
+          onClick={handleReset}
+          disabled={isLoading}
+          className="flex-1 bg-gray-500 text-white px-4 py-3 rounded font-medium hover:bg-gray-600 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
+          Скинути
+        </button>
+      </div>
+    </div>
+  )
 }

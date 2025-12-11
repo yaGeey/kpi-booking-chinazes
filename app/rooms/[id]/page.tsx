@@ -1,3 +1,6 @@
+// Header and Footer are provided by `app/layout.tsx` and MUST NOT be rendered
+// inside page components to avoid duplication. Keep this file focused on the
+// room content only.
 import { notFound } from 'next/navigation'
 import { formatPrice } from '@/lib/utils'
 import BookingForm from '@/components/BookingForm'

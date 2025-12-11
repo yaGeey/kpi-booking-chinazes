@@ -1,32 +1,30 @@
-'use server'
-import { cookies } from 'next/headers'
+//components/Header.tsx
+'use client'
 import Link from 'next/link'
-
-export default async function Header() {
-   const cookieStore = await cookies()
-   const authCookie = cookieStore.get('admin-auth')
-   const isAdmin = authCookie && authCookie.value == process.env.ADMIN_PASSWORD_HASH
-   return (
-      <header className="bg-white shadow-sm sticky top-0 z-50">
-         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <Link href="/" className="flex items-center space-x-2">
-               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-xl">B</span>
-               </div>
-               <span className="text-xl font-bold text-gray-900">Booking Room</span>
-            </Link>
-
-            <div className="flex items-center space-x-6">
-               <Link href="/" className="text-gray-700 hover:text-blue-600 transition-colors">
-                  Кімнати
-               </Link>
-               {isAdmin && (
-                  <Link href="/admin" className="text-gray-700 hover:text-blue-600 transition-colors">
-                     Адмін панель
-                  </Link>
-               )}
-            </div>
-         </nav>
-      </header>
-   )
+export default function Header() {
+  const handleOpenFilters = () => {
+    window.dispatchEvent(new Event('openFilters'))
+  }
+  return (
+    <header className="sticky top-0 z-40 bg-white shadow-sm">
+      <nav className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+        
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded bg-blue-600">
+            <span className="font-bold text-white">B</span>
+          </div>
+          <span className="text-lg font-bold text-gray-900">Booking Room</span>
+        </Link>
+        {/* Filter Button */}
+        <button
+          onClick={handleOpenFilters}
+          className="flex items-center gap-2 rounded bg-blue-600 px-4 py-2 font-medium text-white transition hover:bg-blue-700"
+        >
+          <span>🔍</span>
+          <span>Фільтр</span>
+        </button>
+      </nav>
+    </header>
+  )
 }
