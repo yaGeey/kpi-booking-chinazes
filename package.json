@@ -14,7 +14,7 @@
    "dependencies": {
       "@neondatabase/serverless": "^1.0.2",
       "bcryptjs": "^3.0.2",
-      "next": "15.6.0-canary.52",
+      "next": "15.6.0-canary.58",
       "react": "19.1.0",
       "react-dom": "19.1.0",
       "resend": "^6.4.0"
